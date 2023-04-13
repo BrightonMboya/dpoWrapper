@@ -1,7 +1,7 @@
 import axios from "axios";
 import convert from "xml-js";
 
-type TransactionResponse = {
+export type TransactionResponse = {
     Result: string;
     ResultExplanation: string;
 }
