@@ -3,7 +3,10 @@ import convert from "xml-js";
 import { TransactionResponse } from "./emailToToken";
 
 
-export default async function mVisa(companyToken: string, transactionToken: string, staticQR?: number) {
+export default async function mVisa(
+    companyToken: string,
+    transactionToken: string,
+    staticQR?: number) {
     const data = `
 
     <?xml version="1.0" encoding="utf-8"?>
