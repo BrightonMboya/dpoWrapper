@@ -1,8 +1,8 @@
 import axios from "axios";
 import convert from "xml-js";
-import { TransactionResponse } from "./emailToToken";
+import { type TransactionResponse } from "./emailToToken";
 
-export default function refundToken(
+export default async function refundToken(
     companyToken: string,
     transactionToken: string,
     amount: number,
@@ -33,18 +33,18 @@ export default function refundToken(
         },
         data: data,
     };
-    return axios.request(config)
-        .then((response) => {
-            const jsonResponse = convert.xml2js(response.data, { compact: true, alwaysChildren: true });
-            const parsedJson: TransactionResponse = {
-                Result: jsonResponse["API3G"]["Result"]["_text"],
-                ResultExplanation: jsonResponse["API3G"]["ResultExplanation"]["_text"],
-            };
-            return parsedJson;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    try {
+        const response = await axios.request(config);
+        const jsonResponse = convert.xml2js(response.data, { compact: true, alwaysChildren: true });
+        const parsedJson: TransactionResponse = {
+            Result: jsonResponse["API3G"]["Result"]["_text"],
+            ResultExplanation: jsonResponse["API3G"]["ResultExplanation"]["_text"],
+        };
+        return parsedJson;
+    } catch (error) {
+        console.log(error);
+        return error
+    }
 }
 
 // here I am just testing the function
