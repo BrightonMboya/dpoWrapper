@@ -21,6 +21,15 @@ type responseError = {
     Result: string,
     ResultExplanation: string,
 }
+
+type companyData = {
+    CompanyId: string,
+    CompanyToken: string,
+    UploadFiles: string,
+    coId: string,
+    CompanyCode: string,
+    services: Array<{ name: string, id: string }>
+}
 export default async function merchantOnboarding(
     companyToken: string,
     ContactEmail: string,
@@ -87,18 +96,19 @@ export default async function merchantOnboarding(
     try {
         const xmlResponse = await axios(config);
         const jsonResponse = convert.xml2js(xmlResponse.data, { compact: true, alwaysChildren: true });
+        console.log(jsonResponse);
         if (jsonResponse["API3G"]["Result"]["_text"] === "000") {
             const parsedJson: responseSuccess = {
                 Result: jsonResponse["API3G"]["Result"]["_text"],
                 ResultExplanation: jsonResponse["API3G"]["ResultExplanation"]["_text"],
-                companyData: jsonResponse["API3G"]["companyData"]["Company"].map((company: any) => {
+                companyData: jsonResponse["API3G"]["companyData"]["Company"].map((company: companyData) => {
                     return {
                         CompanyId: company["CompanyId"]["_text"],
                         CompanyToken: company["CompanyToken"]["_text"],
                         UploadFiles: company["UploadFiles"]["_text"],
                         CompanyCode: company["CompanyCode"]["_text"],
                         coId: company["coId"]["_text"],
-                        services: company["services"]["service"].map((service: any) => {
+                        services: company["services"]["service"].map((service: { name: string, id: string }) => {
                             return {
                                 name: service["name"]["_text"],
                                 id: service["id"]["_text"]

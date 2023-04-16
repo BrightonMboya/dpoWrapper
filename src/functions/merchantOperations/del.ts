@@ -51,4 +51,4 @@ const parsedJson = {
 }
 
 
-console.log(parsedJson.CompanyData.services.service);
+console.log(parsedJson.CompanyData);
