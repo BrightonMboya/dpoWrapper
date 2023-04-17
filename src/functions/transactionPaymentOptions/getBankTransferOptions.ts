@@ -1,7 +1,17 @@
 import axios from 'axios';
 import convert from 'xml-js';
 
-const errorCodes = ["000", "999", "804", "950",]
+const errorCodes = ["000", "999", "804", "950"]
+type optionsType = {
+    bankName: string,
+    bankCode: string,
+    instructions: Array<{
+        bankInstructionsEN: string,
+        bankInstructionsIT: string,
+        bankInstructionsFR: string,
+        bankInstructionsSW: string,
+    }>
+}
 export const getBankTransferOptions = async (companyToken: string, transactionToken: string) => {
     const data = `
     <?xml version="1.0" encoding="UTF-8"?>
@@ -34,7 +44,7 @@ export const getBankTransferOptions = async (companyToken: string, transactionTo
             const parsedJson = {
                 Result: jsonResponse['API3G']["Result"]["_text"],
                 ResultExplanation: jsonResponse['API3G']["ResultExplanation"]["_text"],
-                bankOptions: jsonResponse["API3G"]['bankOptions']['option'].map((option) => {
+                bankOptions: jsonResponse["API3G"]['bankOptions']['option'].map((option: optionsType) => {
                     return {
                         bankName: option['bankName']['_text'],
                         bankCode: option['bankCode']['_text'],
