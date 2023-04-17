@@ -1,7 +1,18 @@
 import axios from "axios";
 import convert from "xml-js";
 
-export const errorCodes = ["801", "802", "803", "804", "0130", "001", "904", "950"]
+export const errorCodes = ["0130", "001", "801", "802", "803", "804", "904", "904", "950"]
+type optionsType = {
+    country: string,
+    countryCode: string,
+    paymentname: string,
+    logo: string,
+    cellularprefix: string,
+    amount: string,
+    currency: string,
+    instructions: string,
+
+}
 
 // type TransactionResponse = {
 //     country: string,
@@ -34,20 +45,34 @@ export default async function getMobilePaymentOptions(companyToken: string, tran
     try {
         const xmlResponse = await axios.request(config);
 
+        console.log(xmlResponse.data)
         const jsonResponse = convert.xml2js(xmlResponse.data, { compact: true, alwaysChildren: true });
 
-
-        const parsedJson = {
-            country: jsonResponse["API3G"]["mobileoptions"]["country"]["_text"],
-            countryCode: jsonResponse["API3G"]["mobileoptions"]["countrycode"]["_text"],
-            paymentname: jsonResponse["API3G"]["mobileoptions"]["paymentname"]["_text"],
-            cellularprefix: jsonResponse["API3G"]["mobileoptions"]["cellularprefix"]["_text"],
-            amount: jsonResponse["API3G"]["mobileoptions"]["amount"]["_text"],
-            currency: jsonResponse["API3G"]["mobileoptions"]["currency"]["_text"],
-            instructions: jsonResponse["API3G"]["mobileoptions"]["instructions"]["_text"],
-
+        if (errorCodes.includes(jsonResponse["API3G"]["Result"]["_text"])) {
+            const parsedJson = {
+                Result: jsonResponse["API3G"]["Result"]["_text"],
+                ResultExplanation: jsonResponse["API3G"]["ResultExplanation"]["_text"],
+            }
+            return parsedJson;
+        } else {
+            const parsedJson = {
+                paymentOptions: jsonResponse["API3G"]["mobileoptions"]["option"].map((option: optionsType) => {
+                    return {
+                        country: option["country"]["_text"],
+                        countryCode: option["countrycode"]["_text"],
+                        paymentname: option["paymentname"]["_text"],
+                        logo: option["logo"]["_text"],
+                        cellularprefix: option["cellularprefix"]["_text"],
+                        amount: option["amount"]["_text"],
+                        currency: option["currency"]["_text"],
+                        instructions: option["instructions"]["_text"],
+                    }
+                })
+            }
+            return parsedJson;
         }
-        return parsedJson;
+
+
     } catch (error) {
         console.log(error);
         return error;
@@ -60,24 +85,3 @@ const response = await getMobilePaymentOptions("0B6758B3-BB98-438A-A666-7BF2F9CA
     "C5F4B74A-9727-4BDC-BB5C-B8253C39A81B")
 console.log(response);
 
-// const xml = `
-// <?xml version="1.0" encoding="utf-8"?>
-//         <API3G>
-//         <CompanyToken>hdhfklaf</CompanyToken>
-//         <Request>GetMobilePaymentOptions</Request>
-//         <TransactionToken>aslkdfhdbf</TransactionToken>
-//         </API3G>
-//          <API3G>
-//         <CompanyToken>hdhfklaf</CompanyToken>
-//         <Request>GetMobilePaymentOptions</Request>
-//         <TransactionToken>aslkdfhdbf</TransactionToken>
-//         </API3G>
-//          <API3G>
-//         <CompanyToken>hdhfklaf</CompanyToken>
-//         <Request>GetMobilePaymentOptions</Request>
-//         <TransactionToken>aslkdfhdbf</TransactionToken>
-//         </API3G>
-//     `
-
-// const jsonResponse = convert.xml2js(xml, { compact: true, alwaysChildren: false });
-// console.log(jsonResponse);

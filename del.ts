@@ -1,7 +1,37 @@
-import convert from "xml-js";
+// import convert from "xml-js";
+import { parseString } from "xml2js";
 
 
-const xmlResponse = `
+
+// const xmlResponse = `
+// <?xml version="1.0" encoding="utf-8"?>
+// <API3G>
+//     <paymentoptions>
+//         <mobileoption>
+//             <country>zambia</country>
+//             <countryCode>ZM</countryCode>
+//             <paymentname>MTNZM</paymentname>
+//             <logo>https://s3-eu-west-1.amazonaws.com/directpaystorage/icons/mtn.png</logo>
+//             <celluarprefix>260</celluarprefix>
+//             <amount>80</amount>
+//             <currency>ZMW</currency>
+//             <instructions>Shortly&#8218 you will receive a push prompt on your phone to enter your MoMo PIN and authorize the payment</instructions>
+//         </mobileoption>
+//         <mobileoption>
+//             <country>zambia</country>
+//             <countryCode>ZM</countryCode>
+//             <paymentname>AirtelZM</paymentname>
+//             <logo>https://s3-eu-west-1.amazonaws.com/directpaystorage/icons/airtelmoney.png</logo>
+//             <celluarprefix>260</celluarprefix>
+//             <amount>80</amount>
+//             <currency>ZMW</currency>
+//             <instructions>Shortly&#8218 you will receive a push prompt on your phone to enter your Airtel PIN and authorize the payment</instructions>
+//         </mobileoption>
+//     </paymentoptions>
+// </API3G>
+// `
+
+const xml = `
 <?xml version="1.0" encoding="utf-8"?>
 <API3G>
 	<paymentoptions>
@@ -30,24 +60,21 @@ const xmlResponse = `
 	</paymentoptions>
 </API3G>
 `
-const result = convert.xml2js(xmlResponse, { compact: true, alwaysChildren: true });
-const jsonResponse = {
-    Result: result['API3G']["Result"]["_text"],
-    ResultExplanation: result['API3G']["ResultExplanation"]["_text"],
-    bankOptions: result["API3G"]['bankOptions']['option'].map((option) => {
-        return {
-            bankName: option['bankName']['_text'],
-            bankCode: option['bankCode']['_text'],
-            instructions: {
-                bankInstructionsEN: option['instructions']['bankInstructionsEN']['_text'],
-                bankInstructionsIT: option['instructions']['bankInstructionsIT']['_text'],
-                bankInstructionsFR: option['instructions']['bankInstructionsFR']['_text'],
-                bankInstructionsSW: option['instructions']['bankInstructionsSW']['_text'],
-            }
+try {
+    parseString(xml, (err, result) => {
+        let data = JSON.stringify(result)
+        console.log(data)
+        if (err) {
+            console.log(err)
         }
     })
+
+} catch (error) {
+    console.log(error)
+
 }
-console.log(jsonResponse.bankOptions[0].instructions.bankInstructionsEN)
+
+
 
 
 
