@@ -1,7 +1,7 @@
 import axios from "axios";
 import convert from "xml-js";
 
-export const errorCodes = ["0130", "001", "801", "802", "803", "804", "904", "904", "950"]
+export const errorCodes = ["0130", "001", "801", "802", "803", "804", "904", "950"]
 type optionsType = {
     country: string,
     countryCode: string,

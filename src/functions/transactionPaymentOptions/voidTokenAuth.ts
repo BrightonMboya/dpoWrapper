@@ -2,6 +2,8 @@ import { type TransactionResponse } from "../basicOperations/emailToToken";
 import axios from "axios";
 import convert from "xml-js";
 
+export const errorCodes = ["000", "999", "804", "904", "950"]
+
 export default async function voidTokenAuth(
     companyToken: string,
     transactionToken: string,
@@ -31,6 +33,13 @@ export default async function voidTokenAuth(
         // here if no terminal is found, the response is a string, not an object
         if (xmlResponse.data === "no terminal found") {
             return xmlResponse.data;
+        }
+        if (errorCodes.includes(xmlResponse.data["API3G"]["Result"]["_text"])) {
+            const parsedJson = {
+                Result: xmlResponse.data["API3G"]["Result"]["_text"],
+                ResultExplanation: xmlResponse.data["API3G"]["ResultExplanation"]["_text"],
+            }
+            return parsedJson;
         } else {
             const jsonResponse = convert.xml2js(xmlResponse.data, { compact: true, alwaysChildren: true });
             const parsedJson: TransactionResponse = {

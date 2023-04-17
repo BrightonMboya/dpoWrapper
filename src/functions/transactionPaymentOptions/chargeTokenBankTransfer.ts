@@ -1,12 +1,14 @@
 import axios from "axios";
 import convert from "xml-js";
 
-// type TransactionResponse = {
-//     Result: string,
-//     ResultExplanation: string,
-//     ConvertedAmount: string,
-//     ConvertedCurrency: string,
-// }
+type TransactionResponse = {
+    Result: string,
+    ResultExplanation: string,
+    ConvertedAmount: string,
+    ConvertedCurrency: string,
+}
+
+export const errorCodes = ["000", "999", "804", "904", "950"]
 
 export default async function chargeTokenBankTransfer(
     companyToken: string,
@@ -34,7 +36,22 @@ export default async function chargeTokenBankTransfer(
     try {
         const xmlResponse = await axios.request(config);
         const jsonResponse = convert.xml2js(xmlResponse.data, { compact: true, alwaysChildren: true });
-        return jsonResponse["API3G"];
+        if (errorCodes.includes(jsonResponse["API3G"]["Result"]["_text"])) {
+            const parsedJson = {
+                Result: jsonResponse["API3G"]["Result"]["_text"],
+                ResultExplanation: jsonResponse["API3G"]["ResultExplanation"]["_text"],
+            }
+            return parsedJson;
+        } else {
+            const parsedJson: TransactionResponse = {
+                Result: jsonResponse["API3G"]["Result"]["_text"],
+                ResultExplanation: jsonResponse["API3G"]["ResultExplanation"]["_text"],
+                ConvertedAmount: jsonResponse["API3G"]["ConvertedAmount"]["_text"],
+                ConvertedCurrency: jsonResponse["API3G"]["ConvertedCurrency"]["_text"],
+            }
+            return parsedJson;
+        }
+
 
     } catch (error) {
         console.log(error);
