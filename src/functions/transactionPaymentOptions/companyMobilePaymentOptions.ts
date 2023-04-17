@@ -1,6 +1,5 @@
 import axios from "axios";
 import convert from "xml-js";
-// import { errorCodes } from "./getMobilePaymentOptions"
 const errorCodes = ["801", "802", "803", "804", "0130", "001", "904", "950"]
 
 type terminalType = {

@@ -35,7 +35,7 @@ export default async function getMobilePaymentOptions(companyToken: string, tran
         const xmlResponse = await axios.request(config);
 
         const jsonResponse = convert.xml2js(xmlResponse.data, { compact: true, alwaysChildren: true });
-        console.log(jsonResponse, "eeeeeeeeeeeees");
+
 
         const parsedJson = {
             country: jsonResponse["API3G"]["mobileoptions"]["country"]["_text"],
