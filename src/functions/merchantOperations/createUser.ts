@@ -1,6 +1,7 @@
 import axios from "axios";
 import convert from "xml-js";
 
+const errorCodes = ["000", "902", "999", "801", "802", "803", "804"]
 
 type TransactionResponse = {
     Result: string,
@@ -44,12 +45,21 @@ export default async function (
     try {
         const xmlResponse = await axios.request(config);
         const jsonResponse = convert.xml2js(xmlResponse.data, { compact: true, alwaysChildren: true });
-        const parsedJson: TransactionResponse = {
-            Result: jsonResponse["API3G"]["Result"]["_text"],
-            ResultExplanation: jsonResponse["API3G"]["ResultExplanation"]["_text"],
-            usrUNQ: jsonResponse["API3G"]["usrUNQ"]["_text"],
+        if (errorCodes.includes(jsonResponse["API3G"]["Result"]["_text"])) {
+            const parsedJson = {
+                Result: jsonResponse["API3G"]["Result"]["_text"],
+                ResultExplanation: jsonResponse["API3G"]["ResultExplanation"]["_text"],
+            }
+            return parsedJson;
+        } else {
+
+            const parsedJson: TransactionResponse = {
+                Result: jsonResponse["API3G"]["Result"]["_text"],
+                ResultExplanation: jsonResponse["API3G"]["ResultExplanation"]["_text"],
+                usrUNQ: jsonResponse["API3G"]["usrUNQ"]["_text"],
+            }
+            return parsedJson;
         }
-        return parsedJson;
     } catch (error) {
         console.log(error);
         return error;
