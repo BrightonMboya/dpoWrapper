@@ -30,6 +30,8 @@ type companyData = {
     CompanyCode: string,
     services: Array<{ name: string, id: string }>
 }
+
+
 export default async function merchantOnboarding(
     companyToken: string,
     ContactEmail: string,
