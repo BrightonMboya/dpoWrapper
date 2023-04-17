@@ -6,6 +6,8 @@ export type TransactionResponse = {
     ResultExplanation: string;
 }
 
+
+
 export default async function emailToToken(companyToken: string, transactionToken: string) {
     const data = `
 
@@ -27,6 +29,7 @@ export default async function emailToToken(companyToken: string, transactionToke
     };
     const xmlResponse = await axios.request(config);
     const jsonResponse = convert.xml2js(xmlResponse.data, { compact: true, alwaysChildren: true });
+
     const parsedJson: TransactionResponse = {
         Result: jsonResponse["API3G"]["Result"]["_text"],
         ResultExplanation: jsonResponse["API3G"]["ResultExplanation"]["_text"],

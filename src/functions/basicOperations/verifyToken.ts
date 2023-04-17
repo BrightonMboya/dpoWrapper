@@ -26,6 +26,8 @@ type TransactionResponse = {
     accRef: string,
 }
 
+const errorCodes = ["000", "001", "002", "003", "005", "007", "801", "802", "804", "900", "902", "903", "904", "950"]
+
 export default async function verifyToken(
     companyToken: string,
     transactionToken: string
@@ -50,31 +52,40 @@ export default async function verifyToken(
     try {
         const response = await axios.request(config);
         const jsonResponse = convert.xml2js(response.data, { compact: true, alwaysChildren: true });
-        const parsedJson: TransactionResponse = {
-            Result: jsonResponse["API3G"]["Result"]["_text"],
-            ResultExplanation: jsonResponse["API3G"]["ResultExplanation"]["_text"],
-            customerName: jsonResponse["API3G"]["CustomerName"]["_text"],
-            customerCredit: jsonResponse["API3G"]["CustomerCredit"]["_text"],
-            customerCreditType: jsonResponse["API3G"]["CustomerCreditType"]["_text"],
-            transactionApproval: jsonResponse["API3G"]["TransactionApproval"]["_text"],
-            transactionCurrency: jsonResponse["API3G"]["TransactionCurrency"]["_text"],
-            transactionAmount: jsonResponse["API3G"]["TransactionAmount"]["_text"],
-            fraudAlert: jsonResponse["API3G"]["FraudAlert"]["_text"],
-            fraudExplnation: jsonResponse["API3G"]["FraudExplnation"]["_text"],
-            transactionNetAmount: jsonResponse["API3G"]["TransactionNetAmount"]["_text"],
-            transactionSettlementDate: jsonResponse["API3G"]["TransactionSettlementDate"]["_text"],
-            transactionRollingReserveAmount: jsonResponse["API3G"]["TransactionRollingReserveAmount"],
-            transactionRollingReserveExpirationDate: jsonResponse["API3G"]["TransactionRollingReserveExpirationDate"],
-            transactionRollingReserveDate: jsonResponse["API3G"]["TransactionRollingReserveDate"]["_text"],
-            customerPhone: jsonResponse["API3G"]["CustomerPhone"]["_text"],
-            customerCountry: jsonResponse["API3G"]["CustomerCountry"]["_text"],
-            customerAddress: jsonResponse["API3G"]["CustomerAddress"]["_text"],
-            customerCity: jsonResponse["API3G"]["CustomerCity"]["_text"],
-            customerZip: jsonResponse["API3G"]["CustomerZip"]["_text"],
-            mobilePaymentRequest: jsonResponse["API3G"]["MobilePaymentRequest"]["_text"],
-            accRef: jsonResponse["API3G"]["AccRef"]["_text"],
-        };
-        return parsedJson;
+        if (errorCodes.includes(jsonResponse["API3G"]["Result"]["_text"])) {
+            const parsedJson = {
+                Result: jsonResponse["API3G"]["Result"]["_text"],
+                ResultExplanation: jsonResponse["API3G"]["ResultExplanation"]["_text"],
+            }
+            return parsedJson;
+        } else {
+
+            const parsedJson: TransactionResponse = {
+                Result: jsonResponse["API3G"]["Result"]["_text"],
+                ResultExplanation: jsonResponse["API3G"]["ResultExplanation"]["_text"],
+                customerName: jsonResponse["API3G"]["CustomerName"]["_text"],
+                customerCredit: jsonResponse["API3G"]["CustomerCredit"]["_text"],
+                customerCreditType: jsonResponse["API3G"]["CustomerCreditType"]["_text"],
+                transactionApproval: jsonResponse["API3G"]["TransactionApproval"]["_text"],
+                transactionCurrency: jsonResponse["API3G"]["TransactionCurrency"]["_text"],
+                transactionAmount: jsonResponse["API3G"]["TransactionAmount"]["_text"],
+                fraudAlert: jsonResponse["API3G"]["FraudAlert"]["_text"],
+                fraudExplnation: jsonResponse["API3G"]["FraudExplnation"]["_text"],
+                transactionNetAmount: jsonResponse["API3G"]["TransactionNetAmount"]["_text"],
+                transactionSettlementDate: jsonResponse["API3G"]["TransactionSettlementDate"]["_text"],
+                transactionRollingReserveAmount: jsonResponse["API3G"]["TransactionRollingReserveAmount"],
+                transactionRollingReserveExpirationDate: jsonResponse["API3G"]["TransactionRollingReserveExpirationDate"],
+                transactionRollingReserveDate: jsonResponse["API3G"]["TransactionRollingReserveDate"]["_text"],
+                customerPhone: jsonResponse["API3G"]["CustomerPhone"]["_text"],
+                customerCountry: jsonResponse["API3G"]["CustomerCountry"]["_text"],
+                customerAddress: jsonResponse["API3G"]["CustomerAddress"]["_text"],
+                customerCity: jsonResponse["API3G"]["CustomerCity"]["_text"],
+                customerZip: jsonResponse["API3G"]["CustomerZip"]["_text"],
+                mobilePaymentRequest: jsonResponse["API3G"]["MobilePaymentRequest"]["_text"],
+                accRef: jsonResponse["API3G"]["AccRef"]["_text"],
+            };
+            return parsedJson;
+        }
     } catch (error) {
         console.log(error);
         return error;
