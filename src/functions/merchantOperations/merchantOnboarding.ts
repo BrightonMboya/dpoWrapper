@@ -135,7 +135,7 @@ export default async function merchantOnboarding(
 }
 
 // testing some shit
-const res = await merchantOnboarding(
+const res = merchantOnboarding(
 
     "0B6758B3-BB98-438A-A666-7BF2F9CA6B31",
     "jay@gmail.com",

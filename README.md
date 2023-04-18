@@ -415,3 +415,167 @@ type response = {
     ResultExplanation: string,
 }
 ```
+
+## Merchant Operations
+1. apiTokenToCompany
+
+The APItokenToCompanyCode will give you the company code according to the company token provided
+
+Parameters:
+- `companyToken`: string,
+- `companyAPItokenUNQ`: string
+
+Usage:
+```javascript
+import {apiTokenToCompany} from "dpoWrapper"
+// the response if of type
+type TransactionResponse = {
+    Result: string,
+    ResultExplanation: string,
+    companyCode: string,
+    companyName: string,
+    brandName: string,
+    websiteURL: string,
+    companyEmail: string,
+    notificationEmail: string,
+    companyAddress: string,
+    companyCountry: string,
+    companyMarket: string,
+}
+// or if encountered error
+type response = {
+    Result: string,
+    ResultExplanation: string,
+}
+```
+
+2. createUser
+
+The CreateUser api allow to create a user for a company, if the company settings allow this operation
+
+Parameter:
+- `companyToken`: string,
+- `userCompanyToken`: string,
+- `userFirstName`: string,
+- `userLastName`: string,
+- `userEmail`: string,
+- `userPhoneCode?`: string,
+- `userPhoneNumber?`: string,
+- `userSendSms?`: string,
+  
+Usage:
+```javascript
+import {createUser} from "dpoWrapper"
+// the response if of type
+type TransactionResponse = {
+    Result: string,
+    ResultExplanation: string,
+    usrUNQ: string,
+}
+// or if encountered error
+type response = {
+    Result: string,
+    ResultExplanation: string,
+}
+```
+
+3. getServices
+
+The getServices request will retrieve the list of your available services.
+
+URL: https://secure1.sandbox.directpay.online/API/v6/
+
+Usage
+Use this method in order to get the list of your active services
+Parameter:
+- `companyToken`: string,
+  
+Usage:
+```javascript
+import {getServices} from "dpoWrapper"
+// the response if of type
+type responseType = {
+    Services: Array<
+    {
+    serviceID: string,
+    ServiceName: string,
+}
+    >
+}
+// or if encountered error
+type response = {
+    Result: string,
+    ResultExplanation: string,
+}
+```
+
+4. getServicesForProvider
+
+The getServicesforprovider request will retrieve a list of available services for other Provider Token.
+
+URL: https://secure1.sandbox.directpay.online/API/v6/
+
+Usage:
+Use this method in order to get list of active services for other provider.
+
+Parameter:
+- `companyToken`: string, 
+- `providerToken`: string
+
+
+Usage:
+```javascript
+import {getServicesForProvider} from "dpoWrapper"
+// the response if of type
+type responseType = {
+    Services: Array<
+    {
+    serviceID: string,
+    ServiceName: string,
+} >
+}
+// or if encountered error
+type response = {
+    Result: string,
+    ResultExplanation: string,
+}
+```
+
+5. Merchant Onboarding
+
+Parameters:
+- `companyToken`: string,
+- `ContactEmail`: string,
+- `contactFirstName`: string,
+- `contactLastName`: string,
+- `contactPhoneNumber`: string,
+- `merchantName`: string,
+- `merchantRegisteredName`: string,
+- `merchantCountry`: string,
+- `merchantAddress`: string,
+- `merchantCity`: string,
+- `merchantUrl`: string,
+- `merchantAccountType`: string,
+- `merchantIncorpDate`: string,
+- `merchantNotificationUrl`: string,
+- `merchantDisableEmail`: string,
+- `files`: Array<{ FileTypeId: string, FileType: string, FileBase: string }>
+
+Usage:
+```javascript
+import {merchantOnboarding} from "dpoWrapper"
+// the response if of type
+type companyData = {
+    CompanyId: string,
+    CompanyToken: string,
+    UploadFiles: string,
+    coId: string,
+    CompanyCode: string,
+    services: Array<{ name: string, id: string }>
+}
+// or if encountered error
+type response = {
+    Result: string,
+    ResultExplanation: string,
+}
+```

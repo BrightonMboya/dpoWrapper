@@ -5,6 +5,9 @@ import { type serviceType } from "./getServices";
 const errorCodes = ["801", "802", "803", "804", "902", "950"]
 
 
+type responseType = {
+    Services: serviceType[]
+}
 export default async function getServicesForProvider(companyToken: string, providerToken: string) {
     const data = `
     <?xml version="1.0" encoding="utf-8"?>
@@ -33,7 +36,7 @@ export default async function getServicesForProvider(companyToken: string, provi
             }
             return parsedJson;
         } else {
-            const parsedJson = {
+            const parsedJson: responseType = {
                 Services: jsonResponse["API3G"]["Services"]["Service"].map((service: serviceType) => {
                     return {
                         serviceID: service["ServiceID"]["_text"],
@@ -49,5 +52,5 @@ export default async function getServicesForProvider(companyToken: string, provi
         return error;
     }
 }
-const res = await getServicesForProvider("0B6758B3-BB98-438A-A666-7BF2F9CA8B31", "CA55CE70-770B-4DFC-BBD0-D02117914C5D")
-console.log(res)
+// const res = await getServicesForProvider("0B6758B3-BB98-438A-A666-7BF2F9CA8B31", "CA55CE70-770B-4DFC-BBD0-D02117914C5D")
+// console.log(res)

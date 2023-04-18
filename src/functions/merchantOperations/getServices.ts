@@ -6,6 +6,10 @@ export type serviceType = {
     ServiceName: string,
 }
 
+type responseType = {
+    Services: serviceType[]
+}
+
 const errorCodes = ["801", "802", "803", "804"]
 // console.log(errorCodes.includes(801))
 
@@ -39,7 +43,7 @@ export default async function getServices(companyToken: string) {
             return parsedJson;
         } else {
 
-            const parsedJson = {
+            const parsedJson: responseType = {
                 Services: jsonResponse["API3G"]["Services"]["Service"].map((service: serviceType) => {
                     return {
                         serviceID: service["ServiceID"]["_text"],
@@ -56,5 +60,5 @@ export default async function getServices(companyToken: string) {
     }
 }
 
-const res = await getServices("0B6758B3-BB98-438A-A666-7BF2F9CA8B31")
-console.log(res)
+// const res = await getServices("0B6758B3-BB98-438A-A666-7BF2F9CA8B31")
+// console.log(res)
