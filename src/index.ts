@@ -5,6 +5,7 @@ export { default as mVisaQRCode } from "./functions/basicOperations/mVisaQRCode"
 export { default as refundToken } from "./functions/basicOperations/refundToken";
 export { default as verifyToken } from "./functions/basicOperations/verifyToken";
 export { default as verifyXpay } from "./functions/basicOperations/verifyXpay";
+export { default as updateToken } from "./functions/basicOperations/updateToken"
 export { default as apiTokenToCompanyCode } from "./functions/merchantOperations/apiTokenToCompanyCode"
 export { default as createUser } from "./functions/merchantOperations/createUser"
 export { default as getServices } from "./functions/merchantOperations/getServices"

@@ -30,7 +30,14 @@ const errorCodes = ["000", "001", "002", "003", "005", "007", "801", "802", "804
 
 export default async function verifyToken(
     companyToken: string,
-    transactionToken: string
+    transactionToken: string,
+    companyRef?: string,
+    verifyTransaction?: number,
+    AccRef?: string,
+    customerPhone?: string,
+    customerPhonePrefix?: string,
+    customerEmail?: string,
+
 ) {
     const data = `
     <?xml version="1.0" encoding="utf-8"?>
@@ -38,6 +45,12 @@ export default async function verifyToken(
     <Request>verifyToken</Request>
     <CompanyToken>${companyToken}</CompanyToken>
     <TransactionToken>${transactionToken}</TransactionToken>
+    <companyRef>${companyRef}</companyRef>
+    <verifyTransaction>${verifyTransaction}</verifyTransaction>
+    <AccRef>${AccRef}</AccRef>
+    <customerPhone>${customerPhone}</customerPhone>
+    <customerPhonePrefix>${customerPhonePrefix}</customerPhonePrefix>
+    <customerEmail>${customerEmail}</customerEmail>
     </API3G>
     `;
     let config = {
