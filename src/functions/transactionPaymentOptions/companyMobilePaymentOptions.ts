@@ -9,7 +9,9 @@ type terminalType = {
     terminalmno: string,
 
 }
-
+type responseType = {
+    paymentOptionsMobile: terminalType[]
+}
 export default async function companyMobilePaymentOptions(companyToken: string) {
     const data = `
     <?xml version="1.0" encoding="utf-8"?>
@@ -42,7 +44,7 @@ export default async function companyMobilePaymentOptions(companyToken: string) 
                 return parsedJson;
             }
         } else {
-            const parsedJson = {
+            const parsedJson: responseType = {
                 paymentOptionsMobile: jsonResponse["API3G"]["paymentoptionsmobile"]["terminalmobile"].map((terminal: terminalType) => {
 
                     return {

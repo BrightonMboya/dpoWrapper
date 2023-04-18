@@ -12,6 +12,12 @@ type optionsType = {
         bankInstructionsSW: string,
     }>
 }
+
+type responseType = {
+    Result: string,
+    ResultExplanation: string,
+    bankOptions?: Array<optionsType>
+}
 const getBankTransferOptions = async (companyToken: string, transactionToken: string) => {
     const data = `
     <?xml version="1.0" encoding="UTF-8"?>
@@ -41,7 +47,7 @@ const getBankTransferOptions = async (companyToken: string, transactionToken: st
             }
             return parsedJson;
         } else {
-            const parsedJson = {
+            const parsedJson: responseType = {
                 Result: jsonResponse['API3G']["Result"]["_text"],
                 ResultExplanation: jsonResponse['API3G']["ResultExplanation"]["_text"],
                 bankOptions: jsonResponse["API3G"]['bankOptions']['option'].map((option: optionsType) => {

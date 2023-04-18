@@ -313,3 +313,105 @@ type response = {
     ResultExplanation: string,
 }
 ```
+
+6. getBankTransferOptions
+
+The GetBankTransferOptions request will be used for requesting a payment using Bank Transfer, API will accept a CompanyToken and TransactionToken.
+
+Instructions for the payment process will then be returned, this should be displayed to the customer.
+Upon the customer payment, the transaction status would be updated and should be checked in “verifyToken”
+URL: https://secure.3gdirectpay.com/API/v6/
+
+Response
+
+The method will return payment instructions of all available bank transfer options.
+
+parameters:
+- `companyToken`: string,
+- `transactionToken`: string,
+
+Usage:
+```javascript
+import {getBankTransferOptions} from "dpoWrapper"
+// the response if of type
+type responseType = {
+    Result: string,
+    ResultExplanation: string,
+    bankOptions?: Array<
+    {
+    bankName: string,
+    bankCode: string,
+    instructions: Array<{
+        bankInstructionsEN: string,
+        bankInstructionsIT: string,
+        bankInstructionsFR: string,
+        bankInstructionsSW: string,
+    }>
+}
+    >
+}
+// or if encountered error
+type response = {
+    Result: string,
+    ResultExplanation: string,
+}
+```
+
+7. chargeTokenCreditCard
+
+The chargeTokenCreditCard request will charge a transaction created by createToken
+
+parameters:
+- `companyToken`: string,
+- `transactionToken`: string,
+- `creditCardNumber`: number,
+- `creditCardExpiry`: string,
+- `creditCardCVV`: number,
+- `cardHolderName`: string,
+- `chargeType?`: string,
+- `enrolled?`: string,
+- `eci?`: string,
+- `threeDSTransId?`: string,
+- `cavv?`: string,
+- `threeD`: {
+  - `threedMessageVersion?`: string,
+  - `transactionStatus?`: string,
+  - `threedACSIssuerCode?`: number
+ }
+  
+Usage:
+```javascript
+import {chargeTokenCreditCard} from "dpoWrapper"
+// the response if of type
+type response = {
+    Result: string,
+    ResultExplanation: string,
+}
+```
+
+8. CompanyMobilePaymentOptions
+   
+The CompanyMobilePaymentOptions request will be used to receive the list of available mobile payment options per company
+
+Parameters:
+- `companyToken`: string,
+
+Usage:
+```javascript
+import {companyMobilePaymentOptions} from "dpoWrapper"
+// the response if of type
+type responseType = {
+    paymentOptionsMobile: Array<{
+    terminalredirecturi: string,
+    terminaltype: string,
+    terminalmnocountry: string,
+    terminalmno: string,
+    }>
+}
+
+// or if encountered error
+type response = {
+    Result: string,
+    ResultExplanation: string,
+}
+```
