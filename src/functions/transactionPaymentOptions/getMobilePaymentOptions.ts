@@ -14,15 +14,9 @@ type optionsType = {
 
 }
 
-// type TransactionResponse = {
-//     country: string,
-//     countryCode: string,
-//     paymentname: string,
-//     cellularprefix: string,
-//     amount: string,
-//     currency: string,
-//     instructions: string,
-// }
+type TransactionResponse = {
+    paymentOptions: optionsType[],
+}
 
 export default async function getMobilePaymentOptions(companyToken: string, transactionToken: string) {
     const data = `
@@ -55,7 +49,7 @@ export default async function getMobilePaymentOptions(companyToken: string, tran
             }
             return parsedJson;
         } else {
-            const parsedJson = {
+            const parsedJson: TransactionResponse = {
                 paymentOptions: jsonResponse["API3G"]["mobileoptions"]["option"].map((option: optionsType) => {
                     return {
                         country: option["country"]["_text"],

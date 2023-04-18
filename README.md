@@ -65,6 +65,7 @@ parameters:
 -    `refundApproval?`: number [optional]
 
 ```javascript
+import {refundToken} from 'dpoWrapper'
 const response = await refundToken(
     "0B6758B3-BB98-438A-A666-7BF2F9CA6B31",
     "50671986-5CAE-4C18-955E-C60BB2CAC20F",
@@ -97,11 +98,18 @@ parameters:
  - `userToken?`: string,
 
 ```javascript
+import { updateToken } from 'dpoWrapper'
 const response = await updateToken(
     "0B6758B3-BB98-438A-A666-7BF2F9CA6B31",
     "50671986-5CAE-4C18-955E-C60BB2CAC20F",
     1,
     "test");
+
+// the reesponse if of type
+type response = {
+    Result: string,
+    ResultExplanation: string,
+}
 ```
 5. verifyToken
 The verifyToken request can be initiated at any time, and it is mandatory to verify the token when the customer will return to the application, not verifying the token within 30 minutes of transaction completed of payment, will generate an alert e-mail to the provider announcing that there was no verification process.
@@ -117,6 +125,7 @@ parameters:
 - `customerEmail?`: string,
 
 ```javascript
+import { verifyToken } from 'dpoWrapper'
 const response = await verifyToken(
     "0B6758B3-BB98-438A-A666-7BF2F9CA6B31",
     "C5F4B74A-9727-4BDC-BB5C-B8253C39A81B",
@@ -153,10 +162,154 @@ Request for xPay information
 parameters:
 - `companyToken`: string,
 - `xpayID`: number
+  
+Usage:
+```javascript
+import { verifyXpay } from 'dpoWrapper'
+// the reesponse if of type
+type response = {
+    Result: string,
+    ResultExplanation: string,
+}
+```
 
-7. cancelToken
+1. cancelToken
 The cancelToken request will be used to cancel active transactions.
 
 paramaters: 
 - `companyToken`: string, 
 - `transactionToken`: string
+
+Usage:
+```javascript
+import {cancelToken} from "dpoWrapper"
+// the response if of type
+type response = {
+    Result: string,
+    ResultExplanation: string,
+}
+```
+
+## Transaction Payment Options
+1. GetMobilePaymentOptions
+The GetMobilePaymentOptions request will be used to receive the list of available mobile payment options for the transaction
+
+Parameters: 
+- `companyToken`: string, 
+- `transactionToken`: string
+
+Usage:
+```javascript
+import {getMobilePaymentOptions} from "dpoWrapper"
+// the response if of type
+type res = {
+    paymentOptions: Array<
+    {
+    country: string,
+    countryCode: string,
+    paymentname: string,
+    logo: string,
+    cellularprefix: string,
+    amount: string,
+    currency: string,
+    instructions: string,
+    }
+    >
+}
+```
+
+2. ChargeTokenAuth
+The chargeTokenAuth request will charge a transaction created by createToken and which was authorized
+
+Parameters: 
+- `companyToken`: string, 
+- `transactionToken`: string
+
+Usage:
+```javascript
+import {chargeTokenAuth} from "dpoWrapper"
+// the response if of type
+type response = {
+    Result: string,
+    ResultExplanation: string,
+}
+```
+
+3. voidTokenAuth
+   
+The voidTokenAuth request will void a transaction created by createToken and which had been successful pre-authorised.
+
+To check if a transaction is on authorised status use verifyToken(V6) and check for result 001.
+
+Parameters: 
+- `companyToken`: string, 
+- `transactionToken`: string
+- `voidDetails`: string
+  
+Usage:
+```javascript
+import {voidTokenAuth} from "dpoWrapper"
+// the response if of type
+type response = {
+    Result: string,
+    ResultExplanation: string,
+}
+```
+
+4. chargeTokenBankTransfer
+   
+The chargeTokenBankTransfer request will be used to mark the transaction as "Pending bank transfer" and to get the converted amount and currency for specific bank, API will accept a CompanyToken, TransactionToken and BankCode (received in GetBankTransferOptions).
+
+Upon the customer payment, the transaction status would be updated and should be checked in “verifyToken”
+
+Parameters: 
+- `companyToken`: string, 
+- `transactionToken`: string
+- `bankCode`: string
+  
+Usage:
+```javascript
+import {chargeTokenBankTransfer} from "dpoWrapper"
+// the response if of type
+type response = {
+    companyToken: string,
+    transactionToken: string,
+    bankCode: string,
+}
+
+// or if encountered error
+type response = {
+    Result: string,
+    ResultExplanation: string,
+}
+```
+
+5. chargeTokenMobile
+
+The ChargeTokenMobile request will be used for requesting a payment using mobile payment solutions, API will accept a phone number, MNO (Mobile Operator Name) - like safaricom and the MNO country name. Instructions for the payment process will then be returned, this should be displayed to the customer.
+Upon the customer payment, the transaction status would be updated and should be checked in “verifyToken”
+verifyToken will also display the status of the mobile request
+
+parameters:
+- `companyToken`: string,
+- `transactionToken`: string,
+- `phoneNumber`: string,
+- `mno`: string,
+- `mnoCountry`: string,
+
+Usage:
+```javascript
+import {chargeTokenMobile} from "dpoWrapper"
+// the response if of type
+type response = {
+    Result: string,
+    ResultExplanation: string,
+    instructions: Array<{br: string}>
+    redirectOption: string,
+}
+// or if encountered error
+type response = {
+    Result: string,
+    ResultExplanation: string,
+}
+```

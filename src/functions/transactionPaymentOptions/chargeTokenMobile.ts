@@ -47,7 +47,8 @@ export default async function chargeTokenMobile(
                 resultExplanation: jsonResponse["API3G"]["ResultExplanation"]["_text"],
                 instructions: jsonResponse["API3G"]["Instructions"].map((instruction: any) => {
                     return instruction["_text"]
-                })
+                }),
+                redirectOption: jsonResponse["API3G"]["RedirectOption"]["_text"],
             }
             return parsedJson;
         }
