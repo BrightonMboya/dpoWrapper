@@ -12,7 +12,7 @@ type optionsType = {
         bankInstructionsSW: string,
     }>
 }
-export const getBankTransferOptions = async (companyToken: string, transactionToken: string) => {
+const getBankTransferOptions = async (companyToken: string, transactionToken: string) => {
     const data = `
     <?xml version="1.0" encoding="UTF-8"?>
     <API3G>
@@ -65,6 +65,8 @@ export const getBankTransferOptions = async (companyToken: string, transactionTo
         return error;
     }
 }
+
+export default getBankTransferOptions;
 
 
 // testing the function
